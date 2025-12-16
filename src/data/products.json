@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Pizza Muzarella",
+    "description": "Pizza clásica con salsa y queso",
+    "code": "PZ001",
+    "price": 7200,
+    "status": true,
+    "stock": 30,
+    "category": "Pizzas",
+    "thumbnails": [
+      "pizza-muzza.jpg"
+    ]
+  }
+]

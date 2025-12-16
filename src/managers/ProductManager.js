@@ -20,6 +20,13 @@ class ProductManager {
     }
   }
 
+  // Obtener un producto por ID //
+async getProductById(id) {
+  const products = await this.getProducts();
+  return products.find(p => p.id === Number(id));
+}
+
+
   // Agregar un producto //
   async addProduct(product) {
     try {

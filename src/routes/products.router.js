@@ -1,8 +1,12 @@
-import { Router } from "express";
+import { Router } from "express"; 
 import ProductManager from "../managers/ProductManager.js";
 
 const router = Router();
 const productManager = new ProductManager("./src/data/products.json");
+
+router.get("/ping", (req, res) => {
+  res.send("pong productos");
+});
 
 router.post("/", async (req, res) => {
   try {
@@ -17,6 +21,18 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   const products = await productManager.getProducts();
   res.json(products);
+});
+
+router.get("/:pid", async (req, res) => {
+  const { pid } = req.params;
+
+  const product = await productManager.getProductById(pid);
+
+  if (!product) {
+    return res.status(404).json({ error: "Producto no encontrado" });
+  }
+
+  res.json(product);
 });
 
 export default router;
