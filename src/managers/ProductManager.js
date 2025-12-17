@@ -21,18 +21,57 @@ class ProductManager {
   }
 
   // Obtener un producto por ID //
-async getProductById(id) {
-  const products = await this.getProducts();
-  return products.find(p => p.id === Number(id));
-}
+  async getProductById(id) {
+    const products = await this.getProducts();
+    return products.find((p) => p.id === Number(id));
+  }
 
+  // Actualizar un producto //
+  async updateProduct(id, updates) {
+    const products = await this.getProducts();
+    const index = products.findIndex((p) => p.id === Number(id));
+
+    if (index === -1) return null;
+
+    const { id: _, ...safeUpdates } = updates;
+
+    if (Object.keys(safeUpdates).length === 0) {
+      throw new Error("No hay campos válidos para actualizar");
+    }
+
+    const allowedFields = [
+      "title",
+      "description",
+      "code",
+      "price",
+      "status",
+      "stock",
+      "category",
+      "thumbnails",
+    ];
+
+    for (let field of Object.keys(safeUpdates)) {
+      if (!allowedFields.includes(field)) {
+        throw new Error(`El campo ${field} no se puede actualizar`);
+      }
+    }
+
+    products[index] = {
+      ...products[index],
+      ...safeUpdates,
+    };
+
+    await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
+
+    return products[index];
+  }
 
   // Agregar un producto //
   async addProduct(product) {
     try {
       const products = await this.getProducts();
-      const lastId = products.length > 0 ? products[products.length - 1].id : 0; 
-      const newProduct = { id: lastId + 1, ...product }; 
+      const lastId = products.length > 0 ? products[products.length - 1].id : 0;
+      const newProduct = { id: lastId + 1, ...product };
 
       // Validación //
       const requiredFields = [
