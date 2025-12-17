@@ -99,6 +99,20 @@ class ProductManager {
       console.error("Error agregando producto:", error);
     }
   }
+
+  // Eliminar un producto //
+  async deleteProduct(id) {
+    const products = await this.getProducts();
+    const newProducts = products.filter((p) => p.id !== Number(id));
+
+    if (products.length === newProducts.length) return false;
+
+    await fs.promises.writeFile(
+      this.path,
+      JSON.stringify(newProducts, null, 2)
+    );
+    return true;
+  }
 }
 
 export default ProductManager;
