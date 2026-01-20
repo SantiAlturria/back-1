@@ -5,37 +5,57 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const { category, status, limit = 10, page = 1, sort } = req.query;
+    const {
+      limit = 10,
+      page = 1,
+      sort,
+      query
+    } = req.query;
 
-    // Filtros dinámicos
-    const query = {};
-    if (category) query.category = category;
-    if (status !== undefined) query.status = status === "true";
+    const filter = {};
+    if (query) {
+      if (query === "true" || query === "false") {
+        filter.status = query === "true";
+      } else {
+        filter.category = query;
+      }
+    }
 
-    // Orden
-    const sortOption = {};
-    if (sort === "price") sortOption.price = 1;
-    if (sort === "-price") sortOption.price = -1;
+    let sortOption = {};
+    if (sort === "asc") sortOption = { price: 1 };
+    if (sort === "desc") sortOption = { price: -1 };
 
-    // Paginación
     const options = {
       limit: Number(limit),
-      skip: (Number(page) - 1) * Number(limit),
-      sort: sortOption
+      page: Number(page),
+      sort: sortOption,
+      lean: true
     };
 
-    const products = await Product.find(query, null, options);
-    const total = await Product.countDocuments(query);
+    const result = await Product.paginate(filter, options);
 
     res.json({
       status: "success",
-      total,
-      page: Number(page),
-      limit: Number(limit),
-      products
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: result.hasPrevPage
+        ? `/api/products?page=${result.prevPage}&limit=${limit}`
+        : null,
+      nextLink: result.hasNextPage
+        ? `/api/products?page=${result.nextPage}&limit=${limit}`
+        : null
     });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      status: "error",
+      error: error.message
+    });
   }
 });
 
