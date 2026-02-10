@@ -1,3 +1,6 @@
+import Product from "../models/Product.model.js";
+
+// CREAR PRODUCTO
 export const createProduct = async (req, res) => {
   try {
     const { title, description, price, stock, category, status } = req.body;
@@ -38,13 +41,15 @@ export const createProduct = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error); 
     res.status(500).json({
       status: "error",
-      message: "Error interno del servidor"
+      message: error.message 
     });
   }
 };
 
+// ELIMINAR PRODUCTO
 export const deleteProduct = async (req, res) => {
   try {
     const { pid } = req.params;
@@ -64,13 +69,15 @@ export const deleteProduct = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Error interno del servidor"
+      message: error.message
     });
   }
 };
 
+// OBTENER PRODUCTO POR ID
 export const getProductById = async (req, res) => {
   try {
     const { pid } = req.params;
@@ -90,21 +97,18 @@ export const getProductById = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Error interno del servidor"
+      message: error.message
     });
   }
 };
 
+// OBTENER TODOS LOS PRODUCTOS
 export const getProducts = async (req, res) => {
   try {
-    const {
-      limit = 10,
-      page = 1,
-      sort,
-      query
-    } = req.query;
+    const { limit = 10, page = 1, sort, query } = req.query;
 
     const filter = {};
     if (query) {
@@ -146,13 +150,15 @@ export const getProducts = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Error interno del servidor"
+      message: error.message
     });
   }
 };
 
+// ACTUALIZAR PRODUCTO
 export const updateProduct = async (req, res) => {
   try {
     const { pid } = req.params;
@@ -165,11 +171,7 @@ export const updateProduct = async (req, res) => {
       });
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      pid,
-      updateData,
-      { new: true }
-    );
+    const updatedProduct = await Product.findByIdAndUpdate(pid, updateData, { new: true });
 
     if (!updatedProduct) {
       return res.status(404).json({
@@ -184,9 +186,10 @@ export const updateProduct = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Error interno del servidor"
+      message: error.message
     });
   }
 };
