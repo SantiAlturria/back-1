@@ -1,0 +1,20 @@
+<h1>Productos</h1>
+
+<div class="products-container">
+    {{#each products}}
+    {{> productCard this}}
+    {{/each}}
+
+</div>
+
+<div class="pagination">
+    {{#if hasPrevPage}}
+    <a href="{{prevLink}}">Anterior</a>
+    {{/if}}
+
+    <span>Página {{page}} de {{totalPages}}</span>
+
+    {{#if hasNextPage}}
+    <a href="{{nextLink}}">Siguiente</a>
+    {{/if}}
+</div>
