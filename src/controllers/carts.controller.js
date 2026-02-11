@@ -32,6 +32,12 @@ export const addProductToCart = async (req, res) => {
   try {
     const { cid, productId } = req.params;
     const { quantity = 1 } = req.body;
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "Cantidad inválida"
+      });
+    }
 
     const cart = await Cart.findById(cid);
     if (!cart) {
@@ -124,5 +130,43 @@ export const updateProductQuantity = async (req, res) => {
     res.json({ status: "success", payload: cart });
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
+  }
+};
+
+// REEMPLAZAR CARRITO COMPLETO
+export const replaceCart = async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const { products } = req.body;
+
+    if (!Array.isArray(products)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Products debe ser un array"
+      });
+    }
+
+    const cart = await Cart.findByIdAndUpdate(
+      cid,
+      { products },
+      { new: true }
+    );
+
+    if (!cart) {
+      return res.status(404).json({
+        status: "error",
+        message: "Carrito no encontrado"
+      });
+    }
+
+    res.json({
+      status: "success",
+      payload: cart
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message
+    });
   }
 };

@@ -132,6 +132,15 @@ export const getProducts = async (req, res) => {
 
     const result = await Product.paginate(filter, options);
 
+    // prevLink y nextLink
+    const baseUrl = `${req.protocol}://${req.get('host')}${req.path}`;
+    const prevLink = result.hasPrevPage
+      ? `${baseUrl}?page=${result.page - 1}&limit=${limit}${sort ? `&sort=${sort}` : ''}${query ? `&query=${query}` : ''}`
+      : null;
+    const nextLink = result.hasNextPage
+      ? `${baseUrl}?page=${result.page + 1}&limit=${limit}${sort ? `&sort=${sort}` : ''}${query ? `&query=${query}` : ''}`
+      : null;
+
     res.json({
       status: "success",
       payload: result.docs,
@@ -141,12 +150,8 @@ export const getProducts = async (req, res) => {
       page: result.page,
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
-      prevLink: result.hasPrevPage
-        ? `/api/products?page=${result.prevPage}&limit=${limit}`
-        : null,
-      nextLink: result.hasNextPage
-        ? `/api/products?page=${result.nextPage}&limit=${limit}`
-        : null
+      prevLink,
+      nextLink
     });
 
   } catch (error) {
@@ -157,6 +162,7 @@ export const getProducts = async (req, res) => {
     });
   }
 };
+
 
 // ACTUALIZAR PRODUCTO
 export const updateProduct = async (req, res) => {
