@@ -5,7 +5,7 @@
 
   <a href="/products/{{_id}}">Ver detalle</a>
 
-  <form action="/api/carts/{{../cartId}}/product/{{_id}}" method="POST">
+  <form action="/api/carts/{{@root.cartId}}/products/{{_id}}" method="POST">
     <button type="submit">Agregar al carrito</button>
   </form>
 </div>
