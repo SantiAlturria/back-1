@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import dotenv from "dotenv";
 import { engine } from "express-handlebars";
@@ -9,7 +10,6 @@ import viewsRouter from "./routes/web.routes.js";
 import productsRouter from "./routes/products.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 
-dotenv.config();
 connectDB();
 
 const app = express();
