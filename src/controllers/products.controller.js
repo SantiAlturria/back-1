@@ -8,21 +8,21 @@ export const createProduct = async (req, res) => {
     if (!title || !description || price == null || stock == null || !category) {
       return res.status(400).json({
         status: "error",
-        message: "Faltan campos obligatorios"
+        message: "Faltan campos obligatorios",
       });
     }
 
     if (typeof price !== "number" || price <= 0) {
       return res.status(400).json({
         status: "error",
-        message: "El precio debe ser un número mayor a 0"
+        message: "El precio debe ser un número mayor a 0",
       });
     }
 
     if (!Number.isInteger(stock) || stock < 0) {
       return res.status(400).json({
         status: "error",
-        message: "El stock debe ser un entero mayor o igual a 0"
+        message: "El stock debe ser un entero mayor o igual a 0",
       });
     }
 
@@ -32,19 +32,18 @@ export const createProduct = async (req, res) => {
       price,
       stock,
       category,
-      status: status ?? true
+      status: status ?? true,
     });
 
     res.status(201).json({
       status: "success",
-      payload: newProduct
+      payload: newProduct,
     });
-
   } catch (error) {
-    console.error(error); 
+    console.error(error);
     res.status(500).json({
       status: "error",
-      message: error.message 
+      message: error.message,
     });
   }
 };
@@ -59,20 +58,19 @@ export const deleteProduct = async (req, res) => {
     if (!deletedProduct) {
       return res.status(404).json({
         status: "error",
-        message: "Producto no encontrado"
+        message: "Producto no encontrado",
       });
     }
 
     res.json({
       status: "success",
-      message: "Producto eliminado"
+      message: "Producto eliminado",
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -87,20 +85,19 @@ export const getProductById = async (req, res) => {
     if (!product) {
       return res.status(404).json({
         status: "error",
-        message: "Producto no encontrado"
+        message: "Producto no encontrado",
       });
     }
 
     res.json({
       status: "success",
-      payload: product
+      payload: product,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -127,18 +124,18 @@ export const getProducts = async (req, res) => {
       limit: Number(limit),
       page: Number(page),
       sort: sortOption,
-      lean: true
+      lean: true,
     };
 
     const result = await Product.paginate(filter, options);
 
     // prevLink y nextLink
-    const baseUrl = `${req.protocol}://${req.get('host')}${req.path}`;
+    const baseUrl = `${req.protocol}://${req.get("host")}${req.path}`;
     const prevLink = result.hasPrevPage
-      ? `${baseUrl}?page=${result.page - 1}&limit=${limit}${sort ? `&sort=${sort}` : ''}${query ? `&query=${query}` : ''}`
+      ? `${baseUrl}?page=${result.page - 1}&limit=${limit}${sort ? `&sort=${sort}` : ""}${query ? `&query=${query}` : ""}`
       : null;
     const nextLink = result.hasNextPage
-      ? `${baseUrl}?page=${result.page + 1}&limit=${limit}${sort ? `&sort=${sort}` : ''}${query ? `&query=${query}` : ''}`
+      ? `${baseUrl}?page=${result.page + 1}&limit=${limit}${sort ? `&sort=${sort}` : ""}${query ? `&query=${query}` : ""}`
       : null;
 
     res.json({
@@ -151,18 +148,16 @@ export const getProducts = async (req, res) => {
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
       prevLink,
-      nextLink
+      nextLink,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: error.message
+      message: error.message,
     });
   }
 };
-
 
 // ACTUALIZAR PRODUCTO
 export const updateProduct = async (req, res) => {
@@ -173,29 +168,30 @@ export const updateProduct = async (req, res) => {
     if (!updateData || Object.keys(updateData).length === 0) {
       return res.status(400).json({
         status: "error",
-        message: "No hay datos para actualizar"
+        message: "No hay datos para actualizar",
       });
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(pid, updateData, { new: true });
+    const updatedProduct = await Product.findByIdAndUpdate(pid, updateData, {
+      new: true,
+    });
 
     if (!updatedProduct) {
       return res.status(404).json({
         status: "error",
-        message: "Producto no encontrado"
+        message: "Producto no encontrado",
       });
     }
 
     res.json({
       status: "success",
-      payload: updatedProduct
+      payload: updatedProduct,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: error.message
+      message: error.message,
     });
   }
 };

@@ -4,9 +4,10 @@
   <ul>
     {{#each cart.products}}
       <li>
-        {{this.product.title}} -
-        Cantidad: {{this.quantity}} -
-        Precio: ${{this.product.price}}
+        {{this.product.title}}
+        - Cantidad:
+        {{this.quantity}}
+        - Precio: ${{this.product.price}}
       </li>
     {{/each}}
   </ul>
