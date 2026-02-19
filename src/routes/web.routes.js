@@ -4,6 +4,11 @@ import Cart from "../models/Cart.model.js";
 
 const router = express.Router();
 
+router.get("/", (req, res) => {
+  res.redirect("/products");
+});
+
+
 router.get("/products", async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
@@ -66,6 +71,10 @@ router.get("/carts/:cid", async (req, res) => {
   } catch (error) {
     res.status(500).send("Error al cargar carrito");
   }
+});
+
+router.get("/login", (req, res) => {
+  res.render("login");
 });
 
 export default router;

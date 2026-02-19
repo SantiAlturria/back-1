@@ -1,3 +1,11 @@
 <nav style="padding: 15px; background: #222; color: white;">
-  <a href="/products" style="color: white; margin-right: 15px;">Productos</a>
+  <a href="/products">Productos</a>
+  <button id="logoutBtn">Cerrar sesión</button>
+
+  <script>
+    const logoutBtn = document.getElementById("logoutBtn"); if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token"); window.location.href = "/login"; }); }
+  </script>
+
 </nav>
