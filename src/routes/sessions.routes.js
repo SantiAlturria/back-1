@@ -1,13 +1,17 @@
 import { Router } from "express";
 import passport from "passport";
+import { loginUser } from "../controllers/sessions.controller.js";
 
 const router = Router();
+
+router.post("/login", loginUser);
 
 router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    res.json(req.user);
+    const { password, ...userWithoutPassword } = req.user.toObject();
+    res.json(userWithoutPassword);
   },
 );
 
