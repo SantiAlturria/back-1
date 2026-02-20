@@ -63,11 +63,20 @@ router.get("/products/:pid", async (req, res) => {
 router.get("/carts/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
-    const cart = await Cart.findById(cid).populate("products.product").lean();
+
+    const cart = await Cart.findById(cid)
+      .populate("products.product")
+      .lean();
 
     if (!cart) return res.status(404).render("404");
 
+    cart.products = cart.products.map(item => ({
+      ...item,
+      subtotal: item.quantity * item.product.price
+    }));
+
     res.render("cartView", { cart });
+
   } catch (error) {
     res.status(500).send("Error al cargar carrito");
   }
