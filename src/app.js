@@ -47,6 +47,7 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api", adminRoutes);
+app.use(express.static(path.join(__dirname, "public")));
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);

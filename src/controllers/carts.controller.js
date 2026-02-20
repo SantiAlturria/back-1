@@ -11,7 +11,6 @@ export const createCart = async (req, res) => {
   }
 };
 
-// OBTENER CARRITO POR ID
 export const getCartById = async (req, res) => {
   try {
     const { cid } = req.params;
@@ -23,9 +22,22 @@ export const getCartById = async (req, res) => {
         .json({ status: "error", message: "Carrito no encontrado" });
     }
 
-    res.json({ status: "success", payload: cart });
+    const cartWithTotals = {
+      ...cart.toObject(),
+      products: cart.products.map((item) => ({
+        ...item.toObject(),
+        subtotal:
+          Number(item.quantity) * Number(item.product.price),
+      })),
+    };
+
+    return res.render("cart", { cart: cartWithTotals });
+
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    return res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
   }
 };
 
