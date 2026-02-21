@@ -24,7 +24,8 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1h" },
     );
 
-    res.json({ token });
+    res.cookie("token", token, { httpOnly: true })
+   .redirect("/products");
   } catch (error) {
     res.status(500).json({ error: "Error en login" });
   }
